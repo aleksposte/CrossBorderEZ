@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from app.services.openai_client.py import suggest_hts_code
+from app.services.openai_client import suggest_hts_code
 
 router = APIRouter()
 
@@ -9,14 +9,20 @@ class HTSRequest(BaseModel):
     description: str
 
 
-@router.post("/suggest")
+class HTSResponse(BaseModel):
+    code: str
+    description: str
+    message: str
+
+
+@router.post("/suggest", response_model=HTSResponse)
 async def suggest_hts(request: HTSRequest):
     """
-    Use OpenAI to suggest HTS/HS codes based on product description.
+    Suggest HTS/HS code using OpenAI.
     """
     code = suggest_hts_code(request.description)
     return {
-        "message": "HTS/HS code suggested",
         "code": code,
         "description": request.description,
+        "message": "HTS/HS code suggested by AI",
     }

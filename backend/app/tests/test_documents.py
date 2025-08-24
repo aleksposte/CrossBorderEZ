@@ -5,6 +5,8 @@ client = TestClient(app)
 
 
 def test_generate_documents():
-    response = client.post("/api/documents/generate", json={"shipment": "data"})
+    response = client.post("/api/documents/generate", json={"shipment_id": "SHIP123"})
     assert response.status_code == 200
-    assert "Documents generated" in response.json()["message"]
+    data = response.json()
+    assert data["zip_url"].endswith(".zip")
+    assert "Documents generated" in data["message"]

@@ -1,19 +1,34 @@
 from fastapi import APIRouter
+from pydantic import BaseModel
 
 router = APIRouter()
 
 
-@router.post("/generate")
-async def generate_usmca(data: dict):
-    """
-    Stub endpoint: generate USMCA certificate.
-    """
-    return {"message": "USMCA Certificate generated (stub)", "data": data}
+class USMCACertificateRequest(BaseModel):
+    exporter_name: str
+    importer_name: str
+    producer_name: str
+    hs_code: str
+    description: str
+    country_of_origin: str
+    certifier_name: str
+    certifier_signature: str
+    certifier_date: str
 
 
-@router.post("/validate")
-async def validate_usmca(data: dict):
+class USMCACertificateResponse(BaseModel):
+    certificate_id: str
+    status: str
+    details: dict
+
+
+@router.post("/certificate", response_model=USMCACertificateResponse)
+async def generate_certificate(request: USMCACertificateRequest):
     """
-    Stub endpoint: validate USMCA certificate.
+    Stub: generate USMCA Certificate of Origin.
     """
-    return {"message": "USMCA Certificate validated (stub)", "valid": True}
+    return {
+        "certificate_id": "USMCA-123456",
+        "status": "generated",
+        "details": request.dict(),
+    }
