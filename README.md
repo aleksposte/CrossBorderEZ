@@ -40,3 +40,11 @@ It is designed for **small and medium businesses (SMBs)**, **freight forwarders*
 - **Auth & DB:** Supabase  
 
 ---
+
+## 📂 Project Structure
+crossborder-ez/
+├── backend/ # FastAPI backend with AI logic
+├── frontend/ # React + TypeScript frontend
+├── docs/ # Documentation and reference materials
+├── README.md # Project description
+└── .gitignore # Git ignore rules
