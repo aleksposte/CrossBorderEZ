@@ -32,3 +32,11 @@ async def generate_certificate(request: USMCACertificateRequest):
         "status": "generated",
         "details": request.dict(),
     }
+
+
+# 🔹 функция для workflow
+def generate_usmca_stub(shipment_id: str) -> str:
+    """
+    Stub function for workflow to simulate USMCA generation
+    """
+    return "USMCA generated (stub)"

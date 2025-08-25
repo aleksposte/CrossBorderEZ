@@ -20,7 +20,6 @@ async def calculate_risk(request: RiskRequest):
     """
     Stub endpoint: calculates risk score for a shipment.
     """
-    # Простейшая заглушка
     issues = []
     score = 0
 
@@ -31,7 +30,6 @@ async def calculate_risk(request: RiskRequest):
         issues.append("HTS code is a placeholder")
         score += 20
 
-    # Максимум 100
     score = min(score, 100)
 
     return {"risk_score": score, "issues": issues}

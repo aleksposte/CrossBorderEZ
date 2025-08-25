@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from app.services.openai_client import suggest_hts_code
 
 router = APIRouter()
 
@@ -10,19 +9,17 @@ class HTSRequest(BaseModel):
 
 
 class HTSResponse(BaseModel):
-    code: str
-    description: str
-    message: str
+    hts_code: str
 
 
 @router.post("/suggest", response_model=HTSResponse)
 async def suggest_hts(request: HTSRequest):
     """
-    Suggest HTS/HS code using OpenAI.
+    Stub endpoint for HTS code suggestion
     """
-    code = suggest_hts_code(request.description)
-    return {
-        "code": code,
-        "description": request.description,
-        "message": "HTS/HS code suggested by AI",
-    }
+    return {"hts_code": "010121"}
+
+
+# 🔹 функция для workflow
+def suggest_hts_stub(description: str) -> str:
+    return "010121"
