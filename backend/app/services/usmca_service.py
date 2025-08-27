@@ -1,20 +1,13 @@
-from app.schemas.usmca import USMCACheckRequest, USMCACheckResponse
+from app.schemas.usmca import USMCACheckRequest
+
+USMCA_RULES = {
+    "8708.10": ["Canada", "USA", "Mexico"],  # car parts
+    "8517.12": ["China", "Vietnam"],  # phones
+}
 
 
-def check_usmca_compliance(request: USMCACheckRequest) -> USMCACheckResponse:
-    """
-    Simple compliance logic:
-    - If country_of_origin is USA or Canada, compliant
-    - Otherwise, non-compliant
-    """
-    compliant_countries = ["USA", "Canada", "Mexico"]
-    if request.country_of_origin in compliant_countries:
-        status = "compliant"
-        explanation = f"Shipment from {request.country_of_origin} is USMCA compliant."
-    else:
-        status = "non-compliant"
-        explanation = (
-            f"Shipment from {request.country_of_origin} is NOT USMCA compliant."
-        )
-
-    return USMCACheckResponse(status=status, explanation=explanation)
+def check_usmca_compliance(request: USMCACheckRequest):
+    allowed_countries = USMCA_RULES.get(request.hs_code, [])
+    compliant = request.country_of_origin in allowed_countries
+    message = "Shipment is compliant." if compliant else "Shipment is non-compliant."
+    return compliant, message

@@ -1,5 +1,5 @@
 fastapi
 uvicorn
-pydantic
 pytest
-requests
+httpx
+pydantic

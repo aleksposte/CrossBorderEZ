@@ -1,18 +1,14 @@
-# backend/app/services/hts_service.py
-# from app.schemas.usmca import HTSSuggestionRequest, HTSSuggestionResponse
-# from app.schemas.usmca import HTSSuggestionRequest, HTSSuggestionResponse
-from app.schemas.hts import HTSSuggestionRequest, HTSSuggestionResponse
+from app.schemas.hts import HTSSuggestionRequest
 
-HTS_DB = {
+HTS_CODES = {
     "men's cotton t-shirt": "010121",
     "women's leather jacket": "420330",
-    "laptop computer": "8471.30",
+    "laptop computer": "847130",
     "wireless mouse": "847160",
     "office chair": "940171",
 }
 
 
-def suggest_hts_code(request: HTSSuggestionRequest) -> HTSSuggestionResponse:
-    desc_lower = request.description.lower()
-    code = HTS_DB.get(desc_lower, "999999")
-    return HTSSuggestionResponse(code=code, description=request.description)
+def suggest_hts_code(request: HTSSuggestionRequest) -> str:
+    key = request.description.lower()
+    return HTS_CODES.get(key, "999999")

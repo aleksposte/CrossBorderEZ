@@ -1,26 +1,19 @@
 from fastapi import FastAPI
+from app.routes import hts, usmca, health
 from fastapi.middleware.cors import CORSMiddleware
-
-from app.routes import hts, usmca, workflow, health
 
 app = FastAPI(title="CrossBorder EZ API")
 
+# Include routes with /api prefix
+app.include_router(health.router, prefix="/api")
+app.include_router(hts.router, prefix="/api/hts")
+app.include_router(usmca.router, prefix="/api/usmca", tags=["USMCA"])
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
+    allow_origins=["http://localhost:3000"],  # фронтенд
+    allow_credentials=True,
+    allow_methods=["*"],  # разрешить POST, GET, OPTIONS и т.д.
     allow_headers=["*"],
 )
-
-app.include_router(hts.router)
-app.include_router(usmca.router)
-app.include_router(workflow.router)
-app.include_router(usmca.router)
-
-
-@app.get("/health")
-def health_check():
-    return {"status": "ok"}
-
-
-app.include_router(health.router)

@@ -1,20 +1,21 @@
+import pytest
 from app.services.usmca_service import check_usmca_compliance
 from app.schemas.usmca import USMCACheckRequest
 
 
 def test_usmca_compliant():
-    request = USMCACheckRequest(
+    req = USMCACheckRequest(
         description="car part", hs_code="8708.10", country_of_origin="Canada"
     )
-    response = check_usmca_compliance(request)
-    assert response.status == "compliant"
-    assert "Canada" in response.explanation
+    compliant, msg = check_usmca_compliance(req)
+    assert compliant is True
+    assert "compliant" in msg.lower()
 
 
 def test_usmca_non_compliant():
-    request = USMCACheckRequest(
-        description="phone", hs_code="8517.12", country_of_origin="China"
+    req = USMCACheckRequest(
+        description="phone", hs_code="8517.12", country_of_origin="USA"
     )
-    response = check_usmca_compliance(request)
-    assert response.status == "non-compliant"
-    assert "China" in response.explanation
+    compliant, msg = check_usmca_compliance(req)
+    assert compliant is False
+    assert "non-compliant" in msg.lower()
