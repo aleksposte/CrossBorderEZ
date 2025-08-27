@@ -1,42 +1,35 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+from app.schemas.usmca import USMCACheckRequest, USMCACheckResponse
+from app.services.usmca_service import check_usmca_compliance
 
-router = APIRouter()
+router = APIRouter(prefix="/api/usmca", tags=["USMCA"])
 
 
-class USMCACertificateRequest(BaseModel):
-    exporter_name: str
-    importer_name: str
-    producer_name: str
-    hs_code: str
+@router.post("/", response_model=USMCACheckResponse)
+def usmca_check(request: USMCACheckRequest):
+    """
+    Simple USMCA compliance check endpoint.
+    """
+    return check_usmca_compliance(request)
+
+
+class USMCACheckRequest(BaseModel):
     description: str
+    hs_code: str
     country_of_origin: str
-    certifier_name: str
-    certifier_signature: str
-    certifier_date: str
 
 
-class USMCACertificateResponse(BaseModel):
-    certificate_id: str
+class USMCACheckResponse(BaseModel):
     status: str
-    details: dict
+    explanation: str
 
 
-@router.post("/certificate", response_model=USMCACertificateResponse)
-async def generate_certificate(request: USMCACertificateRequest):
-    """
-    Stub: generate USMCA Certificate of Origin.
-    """
-    return {
-        "certificate_id": "USMCA-123456",
-        "status": "generated",
-        "details": request.dict(),
-    }
-
-
-# 🔹 функция для workflow
-def generate_usmca_stub(shipment_id: str) -> str:
-    """
-    Stub function for workflow to simulate USMCA generation
-    """
-    return "USMCA generated (stub)"
+@router.post("/check", response_model=USMCACheckResponse)
+def check_usmca(data: USMCACheckRequest):
+    if data.country_of_origin.lower() in ["canada", "mexico"]:
+        return USMCACheckResponse(status="Compliant", explanation="Meets USMCA rules")
+    else:
+        return USMCACheckResponse(
+            status="Non-Compliant", explanation="Does not meet USMCA rules"
+        )

@@ -1,26 +1,26 @@
 from fastapi import FastAPI
-from app.routes import health, usmca, hts, risk, documents, workflow
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.routes import hts, usmca, workflow, health
 
 app = FastAPI(title="CrossBorder EZ API")
 
-app.include_router(health.router, prefix="/api", tags=["health"])
-app.include_router(hts.router, prefix="/api/hts", tags=["hts"])
-app.include_router(usmca.router, prefix="/api/usmca", tags=["usmca"])
-app.include_router(risk.router, prefix="/api/risk", tags=["risk"])
-app.include_router(documents.router, prefix="/api/documents", tags=["documents"])
-app.include_router(workflow.router, prefix="/api/workflow", tags=["workflow"])
-
-# ===== CORS =====
-origins = [
-    "http://localhost:5173",  # адрес фронтенда
-    "http://127.0.0.1:5173",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # или конкретные домены
-    allow_credentials=True,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(hts.router)
+app.include_router(usmca.router)
+app.include_router(workflow.router)
+app.include_router(usmca.router)
+
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
+
+app.include_router(health.router)

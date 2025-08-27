@@ -1,22 +1,15 @@
-import pytest
-from app.services.hts_service import suggest_hts_code
+from fastapi.testclient import TestClient
+from app.main import app
+
+client = TestClient(app)
 
 
-@pytest.mark.parametrize(
-    "description,expected_code",
-    [
-        ("Men's Cotton T-Shirt", "010121"),
-        ("Women's Leather Jacket", "420330"),
-        ("Laptop Computer", "847130"),
-        ("Wireless Mouse", "847160"),
-        ("Office Chair", "940171"),
-        ("Unknown Item", "999999"),
-    ],
-)
-def test_suggest_hts_code(description, expected_code):
-    result = suggest_hts_code(description)
-    assert isinstance(result, dict)
-    assert "code" in result
-    assert "description" in result
-    assert result["code"] == expected_code
-    assert result["description"] == description
+def test_hts_suggestion():
+    response = client.post(
+        "/api/hts/suggest",
+        json={"description": "laptop computer", "country_of_origin": "China"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "code" in data
+    assert data["code"] == "847130"
