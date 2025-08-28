@@ -6,7 +6,7 @@ client = TestClient(app)
 
 def test_usmca_compliant():
     response = client.post(
-        "/api/usmca/check",
+        "/api/usmca",
         json={
             "description": "car part",
             "hs_code": "8708.10",
@@ -14,11 +14,13 @@ def test_usmca_compliant():
         },
     )
     assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "Compliant"
 
 
 def test_usmca_non_compliant():
     response = client.post(
-        "/api/usmca/check",
+        "/api/usmca",
         json={
             "description": "phone",
             "hs_code": "8517.12",
@@ -26,3 +28,5 @@ def test_usmca_non_compliant():
         },
     )
     assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "Non-Compliant"

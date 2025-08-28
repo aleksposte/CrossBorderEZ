@@ -1,11 +1,15 @@
 from fastapi import APIRouter
-from app.schemas.hts import HTSSuggestionRequest, HTSSuggestionResponse
-from app.services.hts_service import suggest_hts_code
+from pydantic import BaseModel
 
-router = APIRouter()
+router = APIRouter(prefix="/api/hts", tags=["HTS"])
 
 
-@router.post("/suggest", response_model=HTSSuggestionResponse)
-def hts_suggestion(request: HTSSuggestionRequest):
-    code = suggest_hts_code(request)
-    return HTSSuggestionResponse(code=code, description=request.description)
+class HTSRequest(BaseModel):
+    description: str
+
+
+@router.post("/suggest")
+def suggest_hts(data: HTSRequest):
+    # Здесь вместо реальной логики пока фейковые предложения
+    suggestions = [f"HTS-{i}-{data.description}" for i in range(1, 4)]
+    return {"suggestions": suggestions}

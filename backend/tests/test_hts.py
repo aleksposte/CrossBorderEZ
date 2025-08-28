@@ -11,5 +11,4 @@ def test_hts_suggestion():
     )
     assert response.status_code == 200
     data = response.json()
-    assert "code" in data
-    assert data["code"] == "847130"
+    assert data["code"] == "8471.30"

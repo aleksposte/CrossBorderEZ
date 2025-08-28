@@ -1,14 +1,7 @@
-from app.schemas.hts import HTSSuggestionRequest
-
-HTS_CODES = {
-    "men's cotton t-shirt": "010121",
-    "women's leather jacket": "420330",
-    "laptop computer": "847130",
-    "wireless mouse": "847160",
-    "office chair": "940171",
-}
-
-
-def suggest_hts_code(request: HTSSuggestionRequest) -> str:
-    key = request.description.lower()
-    return HTS_CODES.get(key, "999999")
+def suggest_hts_code(keyword: str):
+    mock_db = {
+        "phone": ["8517.12", "8517.62"],
+        "battery": ["8507.10", "8507.20"],
+        "laptop": ["8471.30", "8471.41"],
+    }
+    return mock_db.get(keyword.lower(), ["0000.00"])

@@ -1,8 +1,10 @@
 from fastapi import APIRouter
+from app.services.workflow_service import get_workflow
 
-router = APIRouter(prefix="/api/workflow", tags=["Workflow"])
+router = APIRouter()
 
 
-@router.post("/process-shipment")
-def process_shipment():
-    return {"status": "Not implemented yet"}
+@router.get("/{process}")
+def workflow_check(process: str):
+    workflow = get_workflow(process)
+    return {"process": process, "workflow": workflow}

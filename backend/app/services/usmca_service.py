@@ -1,13 +1,11 @@
-from app.schemas.usmca import USMCACheckRequest
-
-USMCA_RULES = {
-    "8708.10": ["Canada", "USA", "Mexico"],  # car parts
-    "8517.12": ["China", "Vietnam"],  # phones
-}
+from app.models.usmca_models import USMCACheckRequest
 
 
 def check_usmca_compliance(request: USMCACheckRequest):
-    allowed_countries = USMCA_RULES.get(request.hs_code, [])
-    compliant = request.country_of_origin in allowed_countries
-    message = "Shipment is compliant." if compliant else "Shipment is non-compliant."
-    return compliant, message
+    if request.hs_code.startswith("85") and request.country_of_origin.lower() in [
+        "mexico",
+        "canada",
+        "usa",
+    ]:
+        return True, "Shipment is compliant."
+    return False, "Shipment is not compliant."
